@@ -1,0 +1,225 @@
+
+/* insert into liste(title, description) values ("Le bossu", "Notre Dame de Paris");
+
+*/
+/*select * from liste;*/
+
+DROP SCHEMA IF EXISTS euro_fit_james;
+create database euro_fit_james
+use euro_fit_james;
+
+
+
+DROP TABLE IF EXISTS details_membres;
+CREATE TABLE details_membres
+(
+    id_details_membres INT NOT NULL AUTO_INCREMENT,
+    date_certificat_medical varchar(10) not null,
+    docteur_membres varchar(30) not null,
+    numero_licence varchar(30) not null,
+    parrainnage boolean not null,
+    id_coach int not null,
+    
+    PRIMARY KEY (`id_details_membres`)
+);
+
+DROP TABLE IF EXISTS type_abonnement;
+CREATE TABLE type_abonnement
+(
+    id_type_abonnement INT NOT NULL AUTO_INCREMENT,
+    nom_abonnement varchar(30) not null,
+    prix_abonnement float not null,
+    
+    PRIMARY KEY (`id_type_abonnement`)
+);
+
+DROP TABLE IF EXISTS pays;
+CREATE TABLE pays
+(
+    id_pays INT NOT NULL AUTO_INCREMENT,
+    pays varchar(30) not null,
+    
+    PRIMARY KEY (`id_pays`)
+);
+
+DROP TABLE IF EXISTS code_postal;
+CREATE TABLE code_postal
+(
+    id_code_postal INT NOT NULL AUTO_INCREMENT,
+    code_postal varchar(15) not null,
+    
+    PRIMARY KEY (`id_code_postal`)
+);
+
+DROP TABLE IF EXISTS ville;
+CREATE TABLE ville
+(
+    id_ville INT NOT NULL AUTO_INCREMENT,
+    ville varchar(50) not null,
+    
+    PRIMARY KEY (`id_ville`)
+);
+
+DROP TABLE IF EXISTS adresse;
+CREATE TABLE adresse
+(
+    id_adresse INT AUTO_INCREMENT NOT NULL,
+    adresse varchar(255) not null,
+    id_pays INT NOT NULL,
+    id_code_postal INT NOT NULL,
+    id_ville INT NOT NULL,
+	CONSTRAINT fk_id_pays FOREIGN KEY (id_pays) REFERENCES pays(id_pays),
+    CONSTRAINT fk_id_code_postal FOREIGN KEY (id_code_postal) REFERENCES code_postal(id_code_postal),
+    CONSTRAINT fk_id_ville FOREIGN KEY (id_ville) REFERENCES ville(id_ville),
+    PRIMARY KEY (`id_adresse`)
+);
+
+DROP TABLE IF EXISTS medecin;
+CREATE TABLE medecin
+(
+    id_medecin INT AUTO_INCREMENT NOT NULL,
+    nom_medecin varchar(30) not null,
+    prenom_medecin varchar(30) not null,
+    telephone_medecin varchar(20) not null,
+    mail_medecin varchar(50) not null,
+    id_adresse int not null,
+	CONSTRAINT fk_id_adresse FOREIGN KEY (id_adresse) REFERENCES adresse(id_adresse),
+    PRIMARY KEY (`id_medecin`)
+);
+
+DROP TABLE IF EXISTS analyses_instant;
+CREATE TABLE analyses_instant
+(
+    id_analyses_instant INT AUTO_INCREMENT NOT NULL,
+    imc float not null,
+    calories_metabolisme float not null,
+	calories_besoins float not null,
+	masse_sèche float not null,
+	contenu_minéral float not null,
+	masse_grasse float not null,
+	eau_totale float not null,
+
+    PRIMARY KEY (`id_analyses_instant`)
+);
+
+ DROP TABLE IF EXISTS membres;
+CREATE TABLE membres
+(
+    id_membres INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    nom_membres varchar(20) not null,
+    prenom_membres varchar(20) not null,
+    date_naissance varchar(10) not null,
+    telephone_membres varchar(15) not null,
+    mail_membres varchar(255) not null,
+    carte_membres varchar(30) not null,
+    login varchar(25) not null,
+    pass_word varchar(256) not null,
+    contrat_assurance varchar(30) not null,
+    id_details_membres INT NOT NULL,
+    id_type_abonnement INT NOT NULL,
+    id_analyses_instant INT NOT NULL,
+    id_medecin INT NOT NULL,
+    id_adresse INT NOT NULL,
+	CONSTRAINT FK_id_details_membres FOREIGN KEY (id_details_membres)  REFERENCES details_membres(id_details_membres),
+	CONSTRAINT FK_id_type_abonnement FOREIGN KEY (id_type_abonnement)  REFERENCES type_abonnement(id_type_abonnement),
+    	CONSTRAINT FK_id_analyses_instant FOREIGN KEY (id_analyses_instant)  REFERENCES analyses_instant(id_analyses_instant),
+	CONSTRAINT FK_id_medecin FOREIGN KEY (id_medecin)  REFERENCES medecin(id_medecin),
+	CONSTRAINT FK_id_adress FOREIGN KEY (id_adresse)  REFERENCES adresse(id_adresse)
+);
+
+INSERT INTO ville (ville) VALUES ('cannes');
+INSERT INTO ville (ville) VALUES ('marseille');
+INSERT INTO ville (ville) VALUES ('dijon');
+INSERT INTO ville (ville) VALUES ('Barcelone');
+
+INSERT INTO code_postal (code_postal) VALUES ('13001');
+INSERT INTO code_postal (code_postal) VALUES ('21000');
+INSERT INTO code_postal (code_postal) VALUES ('08002');
+
+INSERT INTO pays (pays) VALUES ('FRANCE');
+INSERT INTO pays (pays) VALUES ('FRANCE');
+INSERT INTO pays (pays) VALUES ('ESPAGNE');
+
+INSERT INTO adresse (adresse) VALUES ('1,Place du port');
+INSERT INTO adresse (adresse) VALUES ('21,avenue de la république');
+INSERT INTO adresse (adresse) VALUES ('1,place de Sant Jaume');
+
+INSERT INTO type_abonnement (nom_abonnement, prix_abonnement) VALUES ('VIP', 200.00);
+INSERT INTO type_abonnement (nom_abonnement, prix_abonnement) VALUES ('Premium VI', 175.00);
+INSERT INTO type_abonnement (nom_abonnement, prix_abonnement) VALUES ('Premium', 150.00);
+INSERT INTO type_abonnement (nom_abonnement, prix_abonnement) VALUES ('Cycliste inter', 150.00);
+INSERT INTO type_abonnement (nom_abonnement, prix_abonnement) VALUES ('Cycliste eau douce', 100.00);
+INSERT INTO type_abonnement (nom_abonnement, prix_abonnement) VALUES ('Le muscle', 150.00);
+INSERT INTO type_abonnement (nom_abonnement, prix_abonnement) VALUES ('Membre inter', 135.00);
+INSERT INTO type_abonnement (nom_abonnement, prix_abonnement) VALUES ('Brain-l', 130.00);
+INSERT INTO type_abonnement (nom_abonnement, prix_abonnement) VALUES ('B less-fit', 125.00);
+
+INSERT INTO details_membres (date_certificat_medical, docteur_membres, numero_licence) VALUES ('1,Place du port');
+INSERT INTO details_membres (date_certificat_medical, docteur_membres, numero_licence) VALUES ('21 avenue de la république');
+INSERT INTO details_membres (date_certificat_medical, docteur_membres, numero_licence) VALUES ('1,place de Sant Jaume');
+
+INSERT INTO medecin (nom_medecin, prenom_medecin, telephone_medecin, mail_medecin) VALUES ('Duggan', 'Agatha', '+33 6 78 54 32 89', 'A.Dug@gmail.com');
+INSERT INTO medecin (nom_medecin, prenom_medecin, telephone_medecin) VALUES ('Jonas', 'Karim', '+45 13 46 79 82', '');
+INSERT INTO medecin (nom_medecin, prenom_medecin, telephone_medecin, mail_medecin) VALUES ('Martinez', 'Sacha', '+336 11 56 84 93', 'Samar@hotmail.com'); 
+
+INSERT INTO analyses_instant (imc, calories_metabolisme, calories_besoins, masse_sèche, contenu_minéral, masse_grasse, eau_totale) VALUES (26.50, 3000, 2500, 40, -1, 69, 65);
+INSERT INTO analyses_instant (imc, calories_metabolisme, calories_besoins, masse_sèche, contenu_minéral, masse_grasse, eau_totale) VALUES (27.09, 3000, 2500, 40, -0.5, 69, 65);
+INSERT INTO analyses_instant (imc, calories_metabolisme, calories_besoins, masse_sèche, contenu_minéral, masse_grasse, eau_totale) VALUES (30.54, 3000, 2500, 40, -0.5, 69, 65);
+INSERT INTO analyses_instant (imc, calories_metabolisme, calories_besoins, masse_sèche, contenu_minéral, masse_grasse, eau_totale) VALUES (35.43, 3000, 2500, 40, -0.5, 69, 65);
+INSERT INTO analyses_instant (imc, calories_metabolisme, calories_besoins, masse_sèche, contenu_minéral, masse_grasse, eau_totale) VALUES (23.20, 3000, 2500, 40, -0.5, 69, 65);
+INSERT INTO analyses_instant (imc, calories_metabolisme, calories_besoins, masse_sèche, contenu_minéral, masse_grasse, eau_totale) VALUES (27.80, 3000, 2500, 40, -0.5, 69, 65); 
+INSERT INTO analyses_instant (imc, calories_metabolisme, calories_besoins, masse_sèche, contenu_minéral, masse_grasse, eau_totale) VALUES (32.30, 3000, 2500, 40, -0.5, 69, 65);
+INSERT INTO analyses_instant (imc, calories_metabolisme, calories_besoins, masse_sèche, contenu_minéral, masse_grasse, eau_totale) VALUES (40.50, 3000, 2500, 40, -0.5, 69, 65);
+INSERT INTO analyses_instant (imc, calories_metabolisme, calories_besoins, masse_sèche, contenu_minéral, masse_grasse, eau_totale) VALUES (30.45, 3000, 2500, 40, -0.5, 69, 65);
+
+INSERT INTO membres (nom_membres, prenom_membres, date_naissance, telephone_membres, mail_membres, numero_licence, id_details_membres, id_type_abonnement, id_analyses_instant, id_medecin, id_adresse) VALUES ('Bond', 'James', '19750121', '+33707070707', 'bondjames@gmail.com', 007007, 1, 1, 8, 1, 5);
+INSERT INTO membres (nom_membres, prenom_membres, date_naissance, telephone_membres, mail_membres, numero_licence, id_details_membres, id_type_abonnement, id_analyses_instant, id_medecin, id_adresse) VALUES ('Boubou', 'Dja', '19780511', '+33707070707', 'boudja@gmail.com', 078511, 2, 4, 7, 1, 3);
+INSERT INTO membres (nom_membres, prenom_membres, date_naissance, telephone_membres, mail_membres, numero_licence, id_details_membres, id_type_abonnement, id_analyses_instant, id_medecin, id_adresse) VALUES ('Lekiller', 'Leon', '19580331', '+33707070707', 'kleon@gmail.com', 058331, 2, 3, 6, 3, 3);
+INSERT INTO membres (nom_membres, prenom_membres, date_naissance, telephone_membres, mail_membres, numero_licence, id_details_membres, id_type_abonnement, id_analyses_instant, id_medecin, id_adresse) VALUES ('Guevara', 'Ernesto', '19280614', '+33606060606', 'guevara@gmail.com', 028614, 3, 3, 5, 3, 8);
+
+-- J' affiche le client vivant en Espagne avec ses coordonnées
+
+SELECT membres.nom_membres, membres.prenom_membres, membres.date_naissance, membres.telephone_membres, membres.mail_membres, 
+adresse.adresse, ville.ville, code_postal.code_postal, pays.pays
+FROM membres
+JOIN adresse ON membres.id_adresse = adresse.id_adresse
+JOIN ville ON adresse.id_ville = ville.id_ville
+JOIN code_postal ON adresse.id_code_postal = code_postal.id_code_postal
+JOIN pays ON adresse.id_pays = pays.id_pays
+WHERE pays.pays = 'Espagne';
+
+-- J'affiche tous les clients avec leurs adresses et leurs médecins respectifs
+
+SELECT membres.nom_membres, membres.prenom_membres, membres.date_naissance, membres.telephone_membres, membres.mail_membres,
+adresse.adresse, ville.ville, code_postal.code_postal, pays.pays,
+medecin.nom_medecin, medecin.prenom_medecin, medecin.telephone_medecin, medecin.mail_medecin
+FROM membres
+JOIN adresse ON membres.id_adresse = adresse.id_adresse
+JOIN ville ON adresse.id_ville = ville.id_ville
+JOIN code_postal ON adresse.id_code_postal = code_postal.id_code_postal
+JOIN pays ON adresse.id_pays = pays.id_pays
+JOIN medecin ON membres.id_medecin = medecin.id_medecin;
+
+-- J'affiche les membres avec leurs analyses et leurs coordonnées ainsi que leurs médecins avec leurs téléphones
+
+SELECT membres.nom_membres, membres.prenom_membres, membres.date_naissance, membres.telephone_membres, membres.mail_membres,
+adresse.adresse, ville.ville, code_postal.code_postal, pays.pays,
+medecin.nom_medecin, medecin.prenom_medecin, medecin.telephone_medecin, medecin.mail_medecin,
+analyses_instant.imc, analyses_instant.calories_metabolisme, analyses_instant.calories_besoins, 
+analyses_instant.masse_sèche, analyses_instant.contenu_minéral, analyses_instant.masse_grasse, analyses_instant.eau_totale
+FROM membres
+JOIN adresse ON membres.id_adresse = adresse.id_adresse
+JOIN ville ON adresse.id_ville = ville.id_ville
+JOIN code_postal ON adresse.id_code_postal = code_postal.id_code_postal
+JOIN pays ON adresse.id_pays = pays.id_pays
+JOIN medecin ON membres.id_medecin = medecin.id_medecin
+JOIN analyses_instant ON membres.id_analyses_instant = analyses_instant.id_analyses_instant;
+
+-- j'efface les membres vivant à dijon
+DELETE FROM membres WHERE membres.id_adresse IN (SELECT adresse.id_adresse FROM adresse JOIN ville ON adresse.id_ville = ville.id_ville WHERE ville.ville = 'Dijon');
+
+-- Je veux le ou les nom de membres avec leurs analyses ainsi que leurs medecin et qui vivent à Dijon
+select nom_membres, imc, calories_metabolisme, calories_besoins, masse_sèche, contenu_minéral, masse_grasse, eau_totale, nom_medecin  from membres
+	JOIN medecin ON membres.id_medecin = medecin.id_medecin
+    JOIN analyses_instant ON membres.id_analyses_instant = analyses_instant.id_analyses_instant
+    WHERE membres.id_adresse IN (SELECT adresse.id_adresse FROM adresse JOIN ville ON adresse.id_ville = ville.id_ville WHERE ville.ville = 'Dijon');
